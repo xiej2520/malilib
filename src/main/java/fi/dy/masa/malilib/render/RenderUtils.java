@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import javax.annotation.Nullable;
+
+import net.minecraft.client.util.math.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -17,6 +19,7 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.DiffuseLighting;
 import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
@@ -718,7 +721,6 @@ public class RenderUtils
      * @param y
      * @param z
      * @param scale
-     * @param mc
      */
     public static void drawTextPlate(List<String> text, double x, double y, double z, float scale)
     {
@@ -747,12 +749,6 @@ public class RenderUtils
         RenderSystem.disableLighting();
         RenderSystem.disableCull();
 
-        if (disableDepth)
-        {
-            RenderSystem.depthMask(false);
-            RenderSystem.disableDepthTest();
-        }
-
         setupBlend();
         RenderSystem.disableTexture();
 
@@ -772,6 +768,12 @@ public class RenderUtils
         int bgg = ((bgColor >>>  8) & 0xFF);
         int bgb = (bgColor          & 0xFF);
 
+        if (disableDepth)
+        {
+            RenderSystem.depthMask(false);
+            RenderSystem.disableDepthTest();
+        }
+
         buffer.begin(GL11.GL_QUADS, VertexFormats.POSITION_COLOR);
         buffer.vertex(-strLenHalf - 1,          -1, 0.0D).color(bgr, bgg, bgb, bga).next();
         buffer.vertex(-strLenHalf - 1,  textHeight, 0.0D).color(bgr, bgg, bgb, bga).next();
@@ -787,23 +789,26 @@ public class RenderUtils
         {
             RenderSystem.enablePolygonOffset();
             RenderSystem.polygonOffset(-0.6f, -1.2f);
-            //RenderSystem.translate(0, 0, -0.02);
         }
 
         for (String line : text)
         {
+            Matrix4f identity = new Matrix4f();
+            identity.loadIdentity();
             if (disableDepth)
             {
-                RenderSystem.depthMask(false);
-                RenderSystem.disableDepthTest();
+                RenderSystem.enableAlphaTest();
+                VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(buffer);
+                textRenderer.draw(line, -strLenHalf, textY, 0x20000000 | (textColor & 0xFFFFFF), false, identity, immediate, true, 0, 15728880);
+                immediate.draw();
+                RenderSystem.enableDepthTest();
+                RenderSystem.depthMask(true);
             }
 
-            textRenderer.draw(line, -strLenHalf, textY, 0x20000000 | (textColor & 0xFFFFFF));
-
-            RenderSystem.enableDepthTest();
-            RenderSystem.depthMask(true);
-
-            textRenderer.draw(line, -strLenHalf, textY, textColor);
+            RenderSystem.enableAlphaTest();
+            VertexConsumerProvider.Immediate immediate = VertexConsumerProvider.immediate(buffer);
+            textRenderer.draw(line, -strLenHalf, textY, textColor, false, identity, immediate, true, 0, 15728880);
+            immediate.draw();
             textY += textRenderer.fontHeight;
         }
 
