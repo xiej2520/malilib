@@ -84,7 +84,6 @@ public class StringUtils
      * @param linesOut
      * @param textIn
      * @param maxLineLength
-     * @param font
      */
     public static void splitTextToLines(List<String> linesOut, String textIn, int maxLineLength)
     {
@@ -277,33 +276,35 @@ public class StringUtils
 
             if (server != null)
             {
-                return server.getLevelName();
+                String name = server.getLevelName();
+                return FileUtils.generateSimpleSafeFileName(name);
             }
         }
         else
         {
+            if (mc.isConnectedToRealms())
+            {
+                if (MaLiLibConfigs.Generic.REALMS_COMMON_CONFIG.getBooleanValue())
+                {
+                    return "realms";
+                }
+                else
+                {
+                    net.minecraft.client.network.ClientPlayNetworkHandler handler = mc.getNetworkHandler();
+                    net.minecraft.network.ClientConnection connection = handler != null ? handler.getConnection() : null;
+
+                    if (connection != null)
+                    {
+                        return "realms_" + stringifyAddress(connection.getAddress());
+                    }
+                }
+            }
+
             net.minecraft.client.network.ServerInfo server = mc.getCurrentServerEntry();
 
             if (server != null)
             {
                 return server.address.replace(':', '_');
-            }
-
-            // If the server entry was null, then that most likely means we are on a Realms server
-
-            if (MaLiLibConfigs.Generic.REALMS_COMMON_CONFIG.getBooleanValue())
-            {
-                return "realms";
-            }
-            else
-            {
-                net.minecraft.client.network.ClientPlayNetworkHandler handler = mc.getNetworkHandler();
-                net.minecraft.network.ClientConnection connection = handler != null ? handler.getConnection() : null;
-
-                if (connection != null)
-                {
-                    return "realms_" + stringifyAddress(connection.getAddress());
-                }
             }
         }
 
@@ -334,7 +335,7 @@ public class StringUtils
 
             if (world != null)
             {
-                return prefix + name + "_dim" + WorldUtils.getDimensionId(world) + suffix;
+                return prefix + name + "_dim_" + WorldUtils.getDimensionId(world) + suffix;
             }
         }
 
