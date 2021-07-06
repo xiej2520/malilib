@@ -390,7 +390,7 @@ public class RenderUtils
             }
 
             RenderSystem.pushMatrix();
-            RenderSystem.scaled(scale, scale, 0);
+            RenderSystem.scaled(scale, scale, 1);
         }
 
         double posX = xOff + bgMargin;
