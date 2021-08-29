@@ -7,6 +7,7 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import net.minecraft.client.util.math.Matrix4f;
+import net.minecraft.util.math.MathHelper;
 import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -1058,7 +1059,7 @@ public class RenderUtils
         }
     }
 
-    public static void renderShulkerBoxPreview(ItemStack stack, int x, int y, boolean useBgColors)
+    public static void renderShulkerBoxPreview(ItemStack stack, int baseX, int baseY, boolean useBgColors)
     {
         if (stack.hasTag())
         {
@@ -1069,15 +1070,14 @@ public class RenderUtils
                 return;
             }
 
-            RenderSystem.pushMatrix();
-            disableDiffuseLighting();
-            RenderSystem.translatef(0F, 0F, 400F);
-
             InventoryOverlay.InventoryRenderType type = InventoryOverlay.getInventoryType(stack);
             InventoryOverlay.InventoryProperties props = InventoryOverlay.getInventoryPropsTemp(type, items.size());
 
-            x += 8;
-            y -= (props.height + 18);
+            int screenWidth = GuiUtils.getScaledWindowWidth();
+            int screenHeight = GuiUtils.getScaledWindowHeight();
+            int height = props.height + 18;
+            int x = MathHelper.clamp(baseX + 8     , 0, screenWidth - props.width);
+            int y = MathHelper.clamp(baseY - height, 0, screenHeight - height);
 
             if (stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() instanceof ShulkerBoxBlock)
             {
@@ -1087,6 +1087,10 @@ public class RenderUtils
             {
                 color(1f, 1f, 1f, 1f);
             }
+
+            disableDiffuseLighting();
+            RenderSystem.pushMatrix();;
+            RenderSystem.translated(0, 0, 400);
 
             InventoryOverlay.renderInventoryBackground(type, x, y, props.slotsPerRow, items.size(), mc());
 
