@@ -55,7 +55,7 @@ public class InventoryUtils
     /**
      * Swaps the stack from the slot <b>slotNum</b> to the given hotbar slot <b>hotbarSlot</b>
      * @param container
-     * @param slot
+     * @param slotNum
      * @param hotbarSlot
      */
     public static void swapSlots(Container container, int slotNum, int hotbarSlot)
@@ -185,7 +185,10 @@ public class InventoryUtils
     @Nullable
     public static Inventory getInventory(World world, BlockPos pos)
     {
-        if (world.isChunkLoaded(pos) == false)
+        @SuppressWarnings("deprecation")
+        boolean isLoaded = world.isChunkLoaded(pos);
+
+        if (isLoaded == false)
         {
             return null;
         }
@@ -205,8 +208,10 @@ public class InventoryUtils
                 if (type != ChestType.SINGLE)
                 {
                     BlockPos posAdj = pos.offset(ChestBlock.getFacing(state));
+                    @SuppressWarnings("deprecation")
+                    boolean isLoadedAdj = world.isChunkLoaded(posAdj);
 
-                    if (world.isChunkLoaded(posAdj))
+                    if (isLoadedAdj)
                     {
                         BlockState stateAdj = world.getBlockState(posAdj);
                         // The method in World now checks that the caller is from the same thread...
@@ -259,7 +264,7 @@ public class InventoryUtils
      * Returns the list of items currently stored in the given Shulker Box
      * (or other storage item with the same NBT data structure).
      * Does not keep empty slots.
-     * @param stackShulkerBox
+     * @param stackIn
      * @return
      */
     public static DefaultedList<ItemStack> getStoredItems(ItemStack stackIn)
@@ -297,7 +302,7 @@ public class InventoryUtils
      * Returns the list of items currently stored in the given Shulker Box
      * (or other storage item with the same NBT data structure).
      * Preserves empty slots.
-     * @param stackShulkerBox
+     * @param stackIn
      * @param slotCount the maximum number of slots, and thus also the size of the list to create
      * @return
      */
@@ -380,7 +385,7 @@ public class InventoryUtils
      * Returns a map of the stored item counts in the given inventory.
      * This also counts the contents of any Shulker Boxes
      * (or other storage item with the same NBT data structure).
-     * @param player
+     * @param inv
      * @return
      */
     public static Object2IntOpenHashMap<ItemType> getInventoryItemCounts(Inventory inv)
