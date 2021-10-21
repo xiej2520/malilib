@@ -116,7 +116,7 @@ public class WidgetStringListEditEntry extends WidgetConfigOptionBase<String>
     {
         if (this.isDummy() == false)
         {
-            IConfigStringList config = this.parent.getParent().getConfig();
+            IConfigStringList config = this.parent.getConfig();
             List<String> list = config.getStrings();
             String value = this.textField.getTextField().getText();
 
@@ -130,7 +130,7 @@ public class WidgetStringListEditEntry extends WidgetConfigOptionBase<String>
 
     private void insertEntryBefore()
     {
-        List<String> list = this.parent.getParent().getConfig().getStrings();
+        List<String> list = this.parent.getConfig().getStrings();
         final int size = list.size();
         int index = this.listIndex < 0 ? size : (this.listIndex >= size ? size : this.listIndex);
         list.add(index, "");
@@ -140,7 +140,7 @@ public class WidgetStringListEditEntry extends WidgetConfigOptionBase<String>
 
     private void removeEntry()
     {
-        List<String> list = this.parent.getParent().getConfig().getStrings();
+        List<String> list = this.parent.getConfig().getStrings();
         final int size = list.size();
 
         if (this.listIndex >= 0 && this.listIndex < size)
@@ -153,7 +153,7 @@ public class WidgetStringListEditEntry extends WidgetConfigOptionBase<String>
 
     private void moveEntry(boolean down)
     {
-        List<String> list = this.parent.getParent().getConfig().getStrings();
+        List<String> list = this.parent.getConfig().getStrings();
         final int size = list.size();
 
         if (this.listIndex >= 0 && this.listIndex < size)
@@ -186,7 +186,7 @@ public class WidgetStringListEditEntry extends WidgetConfigOptionBase<String>
 
     private boolean canBeMoved(boolean down)
     {
-        final int size = this.parent.getParent().getConfig().getStrings().size();
+        final int size = this.parent.getConfig().getStrings().size();
         return (this.listIndex >= 0 && this.listIndex < size) &&
                 ((down && this.listIndex < (size - 1)) || (down == false && this.listIndex > 0));
     }
@@ -288,7 +288,7 @@ public class WidgetStringListEditEntry extends WidgetConfigOptionBase<String>
         private final MaLiLibIcons icon;
         private final String hoverTextkey;
 
-        private ButtonType(MaLiLibIcons icon, String hoverTextkey)
+        ButtonType(MaLiLibIcons icon, String hoverTextkey)
         {
             this.icon = icon;
             this.hoverTextkey = hoverTextkey;
