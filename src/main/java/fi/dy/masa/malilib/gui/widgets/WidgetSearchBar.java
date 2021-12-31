@@ -31,7 +31,7 @@ public class WidgetSearchBar extends WidgetBase
 
     public String getFilter()
     {
-        return this.searchOpen ? this.searchBox.getText() : "";
+        return this.searchOpen ? this.searchBox.getText().toLowerCase() : "";
     }
 
     public boolean hasFilter()
