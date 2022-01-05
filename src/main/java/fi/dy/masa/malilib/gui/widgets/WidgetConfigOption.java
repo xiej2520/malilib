@@ -23,6 +23,7 @@ import fi.dy.masa.malilib.config.gui.ConfigOptionListenerResetConfig.ConfigReset
 import fi.dy.masa.malilib.config.gui.SliderCallbackDouble;
 import fi.dy.masa.malilib.config.gui.SliderCallbackInteger;
 import fi.dy.masa.malilib.config.options.BooleanHotkeyGuiWrapper;
+import fi.dy.masa.malilib.config.options.ConfigBooleanHotkeyed;
 import fi.dy.masa.malilib.config.options.ConfigColor;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.gui.GuiConfigsBase.ConfigOptionWrapper;
@@ -66,14 +67,23 @@ public class WidgetConfigOption extends WidgetConfigOptionBase<ConfigOptionWrapp
         {
             IConfigBase config = wrapper.getConfig();
 
-            if (config instanceof BooleanHotkeyGuiWrapper booleanHotkey)
+            if (config instanceof BooleanHotkeyGuiWrapper)
             {
+                BooleanHotkeyGuiWrapper booleanHotkey = (BooleanHotkeyGuiWrapper) config;
                 this.initialBoolean = booleanHotkey.getBooleanValue();
-                this.initialStringValue = booleanHotkey.getHotkey().getKeybind().getStringValue();
-                this.initialKeybindSettings = booleanHotkey.getHotkey().getKeybind().getSettings();
+                this.initialStringValue = booleanHotkey.getKeybind().getStringValue();
+                this.initialKeybindSettings = booleanHotkey.getKeybind().getSettings();
             }
-            else if (config instanceof IStringRepresentable configStr)
+            else if (config instanceof ConfigBooleanHotkeyed)
             {
+                ConfigBooleanHotkeyed booleanHotkey = (ConfigBooleanHotkeyed) config;
+                this.initialBoolean = booleanHotkey.getBooleanValue();
+                this.initialStringValue = booleanHotkey.getKeybind().getStringValue();
+                this.initialKeybindSettings = booleanHotkey.getKeybind().getSettings();
+            }
+            else if (config instanceof IStringRepresentable)
+            {
+                IStringRepresentable configStr = (IStringRepresentable)  config;
                 this.initialStringValue = configStr.getStringValue();
                 this.lastAppliedValue = configStr.getStringValue();
                 this.initialKeybindSettings = config.getType() == ConfigType.HOTKEY ? ((IHotkey) config).getKeybind().getSettings() : null;
@@ -130,9 +140,18 @@ public class WidgetConfigOption extends WidgetConfigOptionBase<ConfigOptionWrapp
 
         x += labelWidth + 10;
 
-        if (config instanceof BooleanHotkeyGuiWrapper booleanHotkey)
+        if (config instanceof BooleanHotkeyGuiWrapper)
         {
-            this.addBooleanAndHotkeyWidgets(x, y, configWidth, booleanHotkey);
+            BooleanHotkeyGuiWrapper wrapper = (BooleanHotkeyGuiWrapper)  config;
+            IConfigBoolean booleanConfig = wrapper.getBooleanConfig();
+            IKeybind keybind = wrapper.getKeybind();
+            this.addBooleanAndHotkeyWidgets(x, y, configWidth, wrapper, booleanConfig, keybind);
+        }
+        else if (config instanceof ConfigBooleanHotkeyed)
+        {
+            ConfigBooleanHotkeyed hotkeyedBoolean = (ConfigBooleanHotkeyed) config;
+            IKeybind keybind = hotkeyedBoolean.getKeybind();
+            this.addBooleanAndHotkeyWidgets(x, y, configWidth, hotkeyedBoolean, hotkeyedBoolean, keybind);
         }
         else if (type == ConfigType.BOOLEAN)
         {
@@ -198,9 +217,18 @@ public class WidgetConfigOption extends WidgetConfigOptionBase<ConfigOptionWrapp
             IConfigBase config = this.wrapper.getConfig();
             boolean modified = false;
 
-            if (config instanceof BooleanHotkeyGuiWrapper booleanHotkey)
+            if (config instanceof BooleanHotkeyGuiWrapper)
             {
-                IKeybind keybind = booleanHotkey.getHotkey().getKeybind();
+                BooleanHotkeyGuiWrapper booleanHotkey = (BooleanHotkeyGuiWrapper) config;
+                IKeybind keybind = booleanHotkey.getKeybind();
+                return this.initialBoolean != booleanHotkey.getBooleanValue() ||
+                       this.initialStringValue.equals(keybind.getStringValue()) == false ||
+                       this.initialKeybindSettings.equals(keybind.getSettings()) == false;
+            }
+            else if (config instanceof ConfigBooleanHotkeyed)
+            {
+                ConfigBooleanHotkeyed booleanHotkey = (ConfigBooleanHotkeyed) config;
+                IKeybind keybind = booleanHotkey.getKeybind();
                 return this.initialBoolean != booleanHotkey.getBooleanValue() ||
                        this.initialStringValue.equals(keybind.getStringValue()) == false ||
                        this.initialKeybindSettings.equals(keybind.getSettings()) == false;
@@ -232,8 +260,9 @@ public class WidgetConfigOption extends WidgetConfigOptionBase<ConfigOptionWrapp
     public void applyNewValueToConfig()
     {
         if (this.wrapper.getType() == ConfigOptionWrapper.Type.CONFIG &&
-            this.wrapper.getConfig() instanceof IStringRepresentable config)
+                this.wrapper.getConfig() instanceof IStringRepresentable)
         {
+            IStringRepresentable config = (IStringRepresentable) this.wrapper.getConfig();
             if (this.textField != null && this.hasPendingModifications())
             {
                 config.setValueFromString(this.textField.getTextField().getText());
@@ -262,25 +291,26 @@ public class WidgetConfigOption extends WidgetConfigOptionBase<ConfigOptionWrapp
         this.addKeybindResetButton(x, y, keybind, keybindButton);
     }
 
-    protected void addBooleanAndHotkeyWidgets(int x, int y, int configWidth, BooleanHotkeyGuiWrapper config)
+    protected void addBooleanAndHotkeyWidgets(int x, int y, int configWidth,
+                                              IConfigResettable resettableConfig,
+                                              IConfigBoolean booleanConfig,
+                                              IKeybind keybind)
     {
         int booleanBtnWidth = 60;
-        IConfigBoolean booleanConfig = config.getBooleanConfig();
         ConfigButtonBoolean booleanButton = new ConfigButtonBoolean(x, y, booleanBtnWidth, 20, booleanConfig);
         x += booleanBtnWidth + 2;
         configWidth -= booleanBtnWidth + 2 + 22;
 
-        IKeybind keybind = config.getHotkey().getKeybind();
         ConfigButtonKeybind keybindButton = new ConfigButtonKeybind(x, y, configWidth, 20, keybind, this.host);
         x += configWidth + 2;
 
         this.addWidget(new WidgetKeybindSettings(x, y, 20, 20, keybind, booleanConfig.getName(), this.parent, this.host.getDialogHandler()));
         x += 22;
 
-        ButtonGeneric resetButton = this.createResetButton(x, y, config);
+        ButtonGeneric resetButton = this.createResetButton(x, y, resettableConfig);
 
-        ConfigOptionChangeListenerButton booleanChangeListener = new ConfigOptionChangeListenerButton(config, resetButton, null);
-        HotkeyedBooleanResetListener resetListener = new HotkeyedBooleanResetListener(config, booleanButton, keybindButton, resetButton, this.host);
+        ConfigOptionChangeListenerButton booleanChangeListener = new ConfigOptionChangeListenerButton(resettableConfig, resetButton, null);
+        HotkeyedBooleanResetListener resetListener = new HotkeyedBooleanResetListener(resettableConfig, booleanButton, keybindButton, resetButton, this.host);
 
         this.host.addKeybindChangeListener(resetListener::updateButtons);
 
@@ -395,13 +425,13 @@ public class WidgetConfigOption extends WidgetConfigOptionBase<ConfigOptionWrapp
 
     public static class HotkeyedBooleanResetListener implements IButtonActionListener
     {
-        private final BooleanHotkeyGuiWrapper config;
+        private final IConfigResettable config;
         private final ButtonGeneric booleanButton;
         private final ConfigButtonKeybind hotkeyButton;
         private final ButtonGeneric resetButton;
         private final IKeybindConfigGui host;
 
-        public HotkeyedBooleanResetListener(BooleanHotkeyGuiWrapper config,
+        public HotkeyedBooleanResetListener(IConfigResettable config,
                                             ButtonGeneric booleanButton,
                                             ConfigButtonKeybind hotkeyButton,
                                             ButtonGeneric resetButton,
