@@ -1089,8 +1089,8 @@ public class RenderUtils
             }
 
             disableDiffuseLighting();
-            RenderSystem.pushMatrix();;
-            RenderSystem.translated(0, 0, 400);
+            RenderSystem.pushMatrix();
+            RenderSystem.translated(0, 0, 500);
 
             InventoryOverlay.renderInventoryBackground(type, x, y, props.slotsPerRow, items.size(), mc());
 
