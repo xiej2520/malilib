@@ -267,12 +267,15 @@ public class RenderUtils
             drawGradientRect(textStartX - 3, textStartY - 3, textStartX + maxLineLength + 3, textStartY - 3 + 1, zLevel, fillColor1, fillColor1);
             drawGradientRect(textStartX - 3, textStartY + textHeight + 2, textStartX + maxLineLength + 3, textStartY + textHeight + 3, zLevel, fillColor2, fillColor2);
 
+            RenderSystem.pushMatrix();
+            RenderSystem.translated(0, 0, 300);
             for (int i = 0; i < textLines.size(); ++i)
             {
                 String str = textLines.get(i);
                 font.drawWithShadow(str, textStartX, textStartY, 0xFFFFFFFF);
                 textStartY += lineHeight;
             }
+            RenderSystem.popMatrix();
 
             RenderSystem.enableLighting();
             RenderSystem.enableDepthTest();

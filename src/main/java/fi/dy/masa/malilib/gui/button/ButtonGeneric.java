@@ -1,6 +1,8 @@
 package fi.dy.masa.malilib.gui.button;
 
 import javax.annotation.Nullable;
+
+import com.mojang.blaze3d.systems.RenderSystem;
 import org.apache.commons.lang3.StringUtils;
 import fi.dy.masa.malilib.gui.LeftRight;
 import fi.dy.masa.malilib.gui.interfaces.IGuiIcon;
@@ -98,6 +100,8 @@ public class ButtonGeneric extends ButtonBase
             RenderUtils.color(1f, 1f, 1f, 1f);
             RenderUtils.setupBlend();
             RenderUtils.setupBlendSimple();
+            RenderSystem.depthMask(true);
+            RenderSystem.enableDepthTest();
 
             if (this.renderDefaultBackground)
             {

@@ -258,10 +258,12 @@ public class WidgetDropDownList<T> extends WidgetBase
         RenderUtils.color(1f, 1f, 1f, 1f);
 
         RenderSystem.pushMatrix();
-        RenderSystem.translatef(0, 0, 1);
+        RenderSystem.translatef(0, 0, 10);
         List<T> list = this.filteredEntries;
         int visibleEntries = Math.min(this.maxVisibleEntries, list.size());
 
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
         RenderUtils.drawOutlinedBox(this.x + 1, this.y, this.width - 2, this.height - 1, 0xFF101010, 0xFFC0C0C0);
 
         String str = this.getDisplayString(this.getSelectedEntry());
@@ -278,6 +280,8 @@ public class WidgetDropDownList<T> extends WidgetBase
                 this.searchBar.draw(mouseX, mouseY);
             }
 
+            RenderSystem.depthMask(true);
+            RenderSystem.enableDepthTest();
             RenderUtils.drawOutline(this.x, this.y + this.height, this.width, visibleEntries * this.height + 2, 0xFFE0E0E0);
 
             int y = this.y + this.height + 1;
@@ -294,6 +298,8 @@ public class WidgetDropDownList<T> extends WidgetBase
                     bg = 0x60FFFFFF;
                 }
 
+                RenderSystem.depthMask(true);
+                RenderSystem.enableDepthTest();
                 RenderUtils.drawRect(this.x, y, this.width - scrollWidth, this.height, bg);
                 str = this.getDisplayString(list.get(i));
                 this.drawString(txtX, txtY, 0xFFE0E0E0, str);
@@ -306,6 +312,8 @@ public class WidgetDropDownList<T> extends WidgetBase
             int h = visibleEntries * this.height;
             int totalHeight = Math.max(h, list.size() * this.height);
 
+            RenderSystem.depthMask(true);
+            RenderSystem.enableDepthTest();
             this.scrollBar.render(mouseX, mouseY, 0, x, y, this.scrollbarWidth, h, totalHeight);
         }
         else
