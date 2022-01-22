@@ -146,6 +146,9 @@ public class InventoryOverlay
             }
         }
 
+        RenderSystem.enableDepthTest();
+        RenderSystem.enableBlend();
+
         tessellator.draw();
     }
 
