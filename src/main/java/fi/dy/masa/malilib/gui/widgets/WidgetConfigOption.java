@@ -24,7 +24,6 @@ import fi.dy.masa.malilib.config.gui.SliderCallbackDouble;
 import fi.dy.masa.malilib.config.gui.SliderCallbackInteger;
 import fi.dy.masa.malilib.config.options.BooleanHotkeyGuiWrapper;
 import fi.dy.masa.malilib.config.options.ConfigBooleanHotkeyed;
-import fi.dy.masa.malilib.config.options.ConfigColor;
 import fi.dy.masa.malilib.gui.GuiBase;
 import fi.dy.masa.malilib.gui.GuiConfigsBase.ConfigOptionWrapper;
 import fi.dy.masa.malilib.gui.GuiTextFieldGeneric;
@@ -121,7 +120,7 @@ public class WidgetConfigOption extends WidgetConfigOptionBase<ConfigOptionWrapp
 
         this.addLabel(x, y + 7, labelWidth, 8, 0xFFFFFFFF, config.getConfigGuiDisplayName());
 
-        String comment = null;
+        String comment;
         IConfigInfoProvider infoProvider = this.host.getHoverInfoProvider();
 
         if (infoProvider != null)
@@ -183,6 +182,7 @@ public class WidgetConfigOption extends WidgetConfigOptionBase<ConfigOptionWrapp
             {
                 configWidth -= 22; // adjust the width to match other configs due to the color display
                 this.colorDisplayPosX = x + configWidth + 2;
+                this.addWidget(new WidgetColorIndicator(this.colorDisplayPosX, y + 1, 19, 19, (IConfigInteger) config));
             }
             else if (type == ConfigType.INTEGER || type == ConfigType.DOUBLE)
             {
@@ -200,7 +200,7 @@ public class WidgetConfigOption extends WidgetConfigOptionBase<ConfigOptionWrapp
                 this.addConfigTextFieldEntry(x, y, resetX, configWidth, configHeight, (IConfigValue) config);
             }
 
-            if (config instanceof IConfigSlider)
+            if (type != ConfigType.COLOR && config instanceof IConfigSlider)
             {
                 IGuiIcon icon = ((IConfigSlider) config).shouldUseSlider() ? MaLiLibIcons.BTN_TXTFIELD : MaLiLibIcons.BTN_SLIDER;
                 ButtonGeneric toggleBtn = new ButtonGeneric(this.colorDisplayPosX, y + 2, icon);
@@ -386,17 +386,8 @@ public class WidgetConfigOption extends WidgetConfigOptionBase<ConfigOptionWrapp
 
         if (this.wrapper.getType() == ConfigOptionWrapper.Type.CONFIG)
         {
-            IConfigBase config = this.wrapper.getConfig();
             this.drawTextFields(mouseX, mouseY);
             super.render(mouseX, mouseY, selected);
-
-            if (config.getType() == ConfigType.COLOR)
-            {
-                int y = this.y + 1;
-                RenderUtils.drawRect(this.colorDisplayPosX    , y + 0, 19, 19, 0xFFFFFFFF);
-                RenderUtils.drawRect(this.colorDisplayPosX + 1, y + 1, 17, 17, 0xFF000000);
-                RenderUtils.drawRect(this.colorDisplayPosX + 2, y + 2, 15, 15, 0xFF000000 | ((ConfigColor) config).getIntegerValue());
-            }
         }
     }
 
