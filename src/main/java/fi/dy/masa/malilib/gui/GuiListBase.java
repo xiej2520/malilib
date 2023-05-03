@@ -188,4 +188,16 @@ public abstract class GuiListBase<TYPE, WIDGET extends WidgetListEntryBase<TYPE>
             this.getListWidget().drawContents(mouseX, mouseY, partialTicks);
         }
     }
+
+    @Override
+    protected void drawHoveredWidget(int mouseX, int mouseY)
+    {
+        super.drawHoveredWidget(mouseX, mouseY);
+
+        if (this.getListWidget() != null && this.shouldRenderHoverStuff())
+        {
+            this.getListWidget().drawHoveredWidget(mouseX, mouseY);
+            this.getListWidget().drawButtonHoverTexts(mouseX, mouseY, 0f);
+        }
+    }
 }
