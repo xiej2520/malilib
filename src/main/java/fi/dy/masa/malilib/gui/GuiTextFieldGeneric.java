@@ -1,9 +1,9 @@
 package fi.dy.masa.malilib.gui;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import com.mojang.blaze3d.systems.RenderSystem;
+import fi.dy.masa.malilib.util.InfoUtils;
 
 public class GuiTextFieldGeneric extends TextFieldWidget
 {
@@ -11,6 +11,7 @@ public class GuiTextFieldGeneric extends TextFieldWidget
     protected int y;
     protected int width;
     protected int height;
+    protected int zLevel;
 
     public GuiTextFieldGeneric(int x, int y, int width, int height, TextRenderer textRenderer)
     {
@@ -74,51 +75,48 @@ public class GuiTextFieldGeneric extends TextFieldWidget
                mouseY >= this.y && mouseY < this.y + this.height;
     }
 
-    @Override
-    public void setFocused(boolean isFocusedIn)
-    {
-        boolean wasFocused = this.isFocused();
-        super.setFocused(isFocusedIn);
-
-        if (this.isFocused() != wasFocused)
-        {
-            MinecraftClient.getInstance().keyboard.enableRepeatEvents(this.isFocused());
-        }
-    }
-
+    // Don't call this method, call the vanilla method directly
+    @Deprecated
     public int getCursorPosition()
     {
-        return this.getCursor();
+        InfoUtils.showGuiOrInGameMessage(Message.MessageType.WARNING, "malilib 0.18.2 deprecated the getCursorPosition() method. Update the mod that owns the GUI where this warning happens to the latest version.");
+        return 0;
     }
 
+    // Don't call this method, call the vanilla method directly
+    @Deprecated
     public void setCursorPosition(int pos)
     {
-        this.setCursor(pos);
+        InfoUtils.showGuiOrInGameMessage(Message.MessageType.WARNING, "malilib 0.18.2 deprecated the setCursorPosition() method. Update the mod that owns the GUI where this warning happens to the latest version.");
     }
 
+    // Don't call this method, call the vanilla method directly
+    @Deprecated
     public void setCursorPositionZero()
     {
-        this.setCursorToStart();
+        InfoUtils.showGuiOrInGameMessage(Message.MessageType.WARNING, "malilib 0.18.2 deprecated the setCursorPositionZero() method. Update the mod that owns the GUI where this warning happens to the latest version.");
     }
 
+    // Don't call this method, call the vanilla method directly
+    @Deprecated
     public void setCursorPositionEnd()
     {
-        this.setCursorToEnd();
+        InfoUtils.showGuiOrInGameMessage(Message.MessageType.WARNING, "malilib 0.18.2 deprecated the setCursorPositionEnd() method. Update the mod that owns the GUI where this warning happens to the latest version.");
     }
 
     public GuiTextFieldGeneric setZLevel(int zLevel)
     {
-        this.setBlitOffset(zLevel);
+        this.zLevel = zLevel;
         return this;
     }
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks)
     {
-        if (this.getBlitOffset() != 0)
+        if (this.zLevel != 0)
         {
             RenderSystem.pushMatrix();
-            RenderSystem.translatef(0, 0, this.getBlitOffset());
+            RenderSystem.translatef(0, 0, this.zLevel);
 
             super.render(mouseX, mouseY, partialTicks);
 

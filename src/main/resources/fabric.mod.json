@@ -31,6 +31,8 @@
     "mixins.malilib.json"
   ],
 
+  "accessWidener": "malilib.accesswidener",
+
   "depends": {
     "minecraft": "1.15.2",
     "fabric-resource-loader-v0": "*"
