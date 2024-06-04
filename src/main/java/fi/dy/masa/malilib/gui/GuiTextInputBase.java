@@ -28,7 +28,7 @@ public abstract class GuiTextInputBase extends GuiDialogBase
         int width = Math.min(maxTextLength * 10, 240);
         this.textField = new GuiTextFieldGeneric(this.dialogLeft + 12, this.dialogTop + 40, width, 20, this.textRenderer);
         this.textField.setMaxLength(maxTextLength);
-        this.textField.setFocused(true);
+        this.textField.setFocusedWrapper(true);
         this.textField.setText(this.originalText);
         this.setBlitOffset(1);
     }
@@ -167,7 +167,7 @@ public abstract class GuiTextInputBase extends GuiDialogBase
             else if (this.type == ButtonType.RESET)
             {
                 this.gui.textField.setText(this.gui.originalText);
-                this.gui.textField.setFocused(true);
+                this.gui.textField.setFocusedWrapper(true);
             }
         }
     }

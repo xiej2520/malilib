@@ -1,5 +1,6 @@
 package fi.dy.masa.malilib.gui;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -37,13 +38,13 @@ public class GuiTextFieldGeneric extends TextFieldWidget
                 this.setText("");
             }
 
-            this.setFocused(true);
+            this.setFocusedWrapper(true);
 
             return true;
         }
         else
         {
-            this.setFocused(false);
+            this.setFocusedWrapper(false);
         }
 
         return ret;
@@ -73,6 +74,18 @@ public class GuiTextFieldGeneric extends TextFieldWidget
     {
         return mouseX >= this.x && mouseX < this.x + this.width &&
                mouseY >= this.y && mouseY < this.y + this.height;
+    }
+
+    // For Compat/Crash prevention, avoid conflict with mojmap
+    public void setFocusedWrapper(boolean isFocusedIn)
+    {
+        boolean wasFocused = this.isFocused();
+        super.setFocused(isFocusedIn);
+
+        if (this.isFocused() != wasFocused)
+        {
+            MinecraftClient.getInstance().keyboard.enableRepeatEvents(this.isFocused());
+        }
     }
 
     public GuiTextFieldGeneric setZLevel(int zLevel)
