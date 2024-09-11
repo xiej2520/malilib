@@ -10,6 +10,7 @@ import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.IConfigBoolean;
 import fi.dy.masa.malilib.config.IConfigDouble;
 import fi.dy.masa.malilib.config.IConfigInteger;
+import fi.dy.masa.malilib.config.IConfigLockedList;
 import fi.dy.masa.malilib.config.IConfigOptionList;
 import fi.dy.masa.malilib.config.IConfigResettable;
 import fi.dy.masa.malilib.config.IConfigSlider;
@@ -34,6 +35,7 @@ import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.ConfigButtonBoolean;
 import fi.dy.masa.malilib.gui.button.ConfigButtonKeybind;
+import fi.dy.masa.malilib.gui.button.ConfigButtonLockedList;
 import fi.dy.masa.malilib.gui.button.ConfigButtonOptionList;
 import fi.dy.masa.malilib.gui.button.ConfigButtonStringList;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
@@ -167,6 +169,11 @@ public class WidgetConfigOption extends WidgetConfigOptionBase<ConfigOptionWrapp
         else if (type == ConfigType.STRING_LIST)
         {
             ConfigButtonStringList optionButton = new ConfigButtonStringList(x, y, configWidth, configHeight, (IConfigStringList) config, this.host, this.host.getDialogHandler());
+            this.addConfigButtonEntry(x + configWidth + 2, y, (IConfigResettable) config, optionButton);
+        }
+        else if (type == ConfigType.LOCKED_LIST)
+        {
+            ConfigButtonLockedList optionButton = new ConfigButtonLockedList(x, y, configWidth, configHeight, (IConfigLockedList) config, this.host, this.host.getDialogHandler());
             this.addConfigButtonEntry(x + configWidth + 2, y, (IConfigResettable) config, optionButton);
         }
         else if (type == ConfigType.COLOR_LIST)
