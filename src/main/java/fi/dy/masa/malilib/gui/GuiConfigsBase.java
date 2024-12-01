@@ -6,6 +6,8 @@ import java.util.List;
 import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.screen.Screen;
+import fi.dy.masa.malilib.MaLiLib;
+import fi.dy.masa.malilib.MaLiLibConfigs;
 import fi.dy.masa.malilib.config.ConfigManager;
 import fi.dy.masa.malilib.config.IConfigBase;
 import fi.dy.masa.malilib.config.gui.ButtonPressDirtyListenerSimple;
@@ -16,13 +18,17 @@ import fi.dy.masa.malilib.gui.interfaces.IConfigInfoProvider;
 import fi.dy.masa.malilib.gui.interfaces.IDialogHandler;
 import fi.dy.masa.malilib.gui.interfaces.IKeybindConfigGui;
 import fi.dy.masa.malilib.gui.widgets.WidgetConfigOption;
+import fi.dy.masa.malilib.gui.widgets.WidgetDropDownList;
 import fi.dy.masa.malilib.gui.widgets.WidgetListConfigOptions;
+import fi.dy.masa.malilib.registry.Registry;
 import fi.dy.masa.malilib.util.GuiUtils;
 import fi.dy.masa.malilib.util.KeyCodes;
 import fi.dy.masa.malilib.util.StringUtils;
+import fi.dy.masa.malilib.util.data.ModInfo;
 
 public abstract class GuiConfigsBase extends GuiListBase<ConfigOptionWrapper, WidgetConfigOption, WidgetListConfigOptions> implements IKeybindConfigGui
 {
+    protected WidgetDropDownList<ModInfo> modSwitchWidget;
     protected final List<Runnable> hotkeyChangeListeners = new ArrayList<>();
     protected final ButtonPressDirtyListenerSimple dirtyListener = new ButtonPressDirtyListenerSimple();
     protected final String modId;
@@ -111,6 +117,59 @@ public abstract class GuiConfigsBase extends GuiListBase<ConfigOptionWrapper, Wi
         super.initGui();
 
         this.minecraft.keyboard.enableRepeatEvents(true);
+        this.buildConfigSwitcher();
+    }
+
+    protected void buildConfigSwitcher()
+    {
+        ModInfo thisMod = Registry.CONFIG_SCREEN.getModInfoFromConfigScreen(this.getClass());
+
+        if (thisMod == null)
+        {
+            // Attempt to Register this screen.
+            try
+            {
+                MaLiLib.logger.debug("GuiConfigsBase#initGui(): Attempting to register [{}] ...", this.getModId());
+                Registry.CONFIG_SCREEN.registerConfigScreenFactory(
+                        new ModInfo(this.getModId(), StringUtils.splitCamelCase(this.getModId()), () -> this)
+                );
+            }
+            catch (Exception ignored)
+            {
+                MaLiLib.logger.warn("GuiConfigsBase#initGui(): Failed to automatically register [{}]", this.getModId());
+                return;
+            }
+        }
+
+        if (thisMod != null && MaLiLibConfigs.Generic.ENABLE_CONFIG_SWITCHER.getBooleanValue())
+        {
+            // Was: y = 13
+            this.modSwitchWidget = new WidgetDropDownList<ModInfo>(GuiUtils.getScaledWindowWidth() - 155, 6, 130, 18, 200, 10, Registry.CONFIG_SCREEN.getAllModsWithConfigScreens())
+            {
+                {
+                    this.selectedEntry = thisMod;
+                }
+
+                @Override
+                protected void setSelectedEntry(int index)
+                {
+                    super.setSelectedEntry(index);
+
+                    if (this.selectedEntry != null && this.selectedEntry.getConfigScreenSupplier() != null)
+                    {
+                        this.mc.openScreen(this.selectedEntry.getConfigScreenSupplier().get());
+                    }
+                }
+
+                @Override
+                protected String getDisplayString(ModInfo entry)
+                {
+                    return entry.getModName();
+                }
+            };
+
+            this.addWidget(this.modSwitchWidget);
+        }
     }
 
     @Override

@@ -315,6 +315,10 @@ public class WidgetDropDownList<T> extends WidgetBase
             RenderSystem.depthMask(true);
             RenderSystem.enableDepthTest();
             this.scrollBar.render(mouseX, mouseY, 0, x, y, this.scrollbarWidth, h, totalHeight);
+
+            this.bindTexture(MaLiLibIcons.TEXTURE);
+            MaLiLibIcons i = MaLiLibIcons.ARROW_UP;
+            RenderUtils.drawTexturedRect(this.x + this.width - 16, this.y + 2, i.getU() + i.getWidth(), i.getV(), i.getWidth(), i.getHeight());
         }
         else
         {
@@ -324,6 +328,16 @@ public class WidgetDropDownList<T> extends WidgetBase
         }
 
         RenderSystem.popMatrix();
+    }
+
+    @Override
+    public void postRenderHovered(int mouseX, int mouseY, boolean selected)
+    {
+        // Draw it again to cover up other elements, when open
+        if (this.isOpen)
+        {
+            this.render(mouseX, mouseY, selected);
+        }
     }
 
     protected static class TextFieldListener implements ITextFieldListener<GuiTextFieldGeneric>

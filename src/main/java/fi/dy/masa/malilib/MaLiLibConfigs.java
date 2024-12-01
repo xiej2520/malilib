@@ -19,10 +19,12 @@ public class MaLiLibConfigs implements IConfigHandler
     public static class Generic
     {
         public static final ConfigHotkey    IGNORED_KEYS            = new ConfigHotkey("ignoredKeys", "", "Any keys set here will be completely ignored");
+        public static final ConfigBoolean   ENABLE_CONFIG_SWITCHER  = new ConfigBoolean("enableConfigSwitcher", true, "Enable the \"Config Switcher\" at the top right to\nquickly switch between Registered Config Screens\nNOTE: If the Config Screen isn't registered,\nwe will try to automatically register them.", "Config Switcher");
         public static final ConfigHotkey    OPEN_GUI_CONFIGS        = new ConfigHotkey("openGuiConfigs", "A,C", "Open the in-game malilib config GUI");
         public static final ConfigBoolean   REALMS_COMMON_CONFIG    = new ConfigBoolean("realmsCommonConfig", true, "Whether or not to use a common config file name for all realms servers.\nIf this is disabled, then the server IP and port are used in the generated config file names.\nHowever, apparently the Realms server addresses change regularly, so the config names would change\nall the time and thus the configs wouldn't save properly.\nSo basically leave this enabled if you only play on one Realms server.\nIf you play on multiple Realms... then the configs will get mixed up regardless.\nUnless you play on the different servers on different Minecraft instances\nto keep the configs separated by the Minecraft instance.");
 
         public static final ImmutableList<IConfigValue> OPTIONS = ImmutableList.of(
+                ENABLE_CONFIG_SWITCHER,
                 IGNORED_KEYS,
                 OPEN_GUI_CONFIGS,
                 REALMS_COMMON_CONFIG
