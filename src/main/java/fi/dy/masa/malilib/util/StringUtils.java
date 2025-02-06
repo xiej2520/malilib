@@ -277,7 +277,9 @@ public class StringUtils
             if (server != null)
             {
                 String name = server.getLevelName();
-                return FileUtils.generateSimpleSafeFileName(name);
+                // todo this was probably breaking non-US Locale file names
+                //return FileUtils.generateSimpleSafeFileName(name);
+                return FileUtils.generateSafeFileName(name);
             }
         }
         else
