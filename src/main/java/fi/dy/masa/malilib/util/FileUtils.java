@@ -3,8 +3,11 @@ package fi.dy.masa.malilib.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Locale;
 import java.util.Set;
+import java.util.function.Consumer;
 import javax.annotation.Nullable;
 import com.google.common.collect.ImmutableSet;
 import net.minecraft.client.MinecraftClient;
@@ -21,9 +24,47 @@ public class FileUtils
         return new File(MinecraftClient.getInstance().runDirectory, "config");
     }
 
+    public static Path getConfigDirectoryAsPath()
+    {
+        return MinecraftClient.getInstance().runDirectory.toPath().resolve("config");
+    }
+
     public static File getMinecraftDirectory()
     {
         return MinecraftClient.getInstance().runDirectory;
+    }
+
+    public static Path getMinecraftDirectoryAsPath()
+    {
+        return MinecraftClient.getInstance().runDirectory.toPath();
+    }
+
+    public static boolean createDirectoriesIfMissing(Path dir)
+    {
+        return createDirectoriesIfMissing(dir, MaLiLib.logger::warn);
+    }
+
+    public static boolean createDirectoriesIfMissing(Path dir,
+                                                     @Nullable Consumer<String> messageConsumer)
+    {
+        try
+        {
+            if (Files.isDirectory(dir) == false)
+            {
+                Files.createDirectories(dir);
+            }
+        }
+        catch (Exception e)
+        {
+            if (messageConsumer != null)
+            {
+                messageConsumer.accept(String.format("Failed to create the directory '%s'", dir.toAbsolutePath()));
+            }
+
+            return false;
+        }
+
+        return true;
     }
 
     /**

@@ -1,12 +1,19 @@
 package fi.dy.masa.malilib.util;
 
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.DoubleTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtIo;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
+import fi.dy.masa.malilib.MaLiLib;
 
 public class NBTUtils
 {
@@ -85,5 +92,52 @@ public class NBTUtils
         }
 
         return null;
+    }
+
+    @Nullable
+    public static CompoundTag readNbtFromFileAsPath(@Nonnull Path file)
+    {
+        if (!Files.exists(file) || !Files.isReadable(file))
+        {
+            return null;
+        }
+
+        try (InputStream is = Files.newInputStream(file))
+        {
+            return NbtIo.readCompressed(is);
+        }
+        catch (Exception e)
+        {
+            MaLiLib.logger.warn("readNbtFromFileAsPath: Failed to read NBT data from file '{}'", file.toString());
+        }
+
+        return null;
+    }
+
+    /**
+     * Write the compound tag, gzipped, to the output stream.
+     */
+    public static void writeCompressed(@Nonnull CompoundTag tag, @Nonnull OutputStream outputStream)
+    {
+        try
+        {
+            NbtIo.writeCompressed(tag, outputStream);
+        }
+        catch (Exception err)
+        {
+            MaLiLib.logger.warn("writeCompressed: Failed to write NBT data to output stream");
+        }
+    }
+
+    public static void writeCompressed(@Nonnull CompoundTag tag, @Nonnull Path file)
+    {
+        try (OutputStream os = Files.newOutputStream(file))
+        {
+            NbtIo.writeCompressed(tag, os);
+        }
+        catch (Exception err)
+        {
+            MaLiLib.logger.warn("writeCompressed: Failed to write NBT data to file");
+        }
     }
 }

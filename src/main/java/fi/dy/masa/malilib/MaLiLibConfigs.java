@@ -1,6 +1,7 @@
 package fi.dy.masa.malilib;
 
-import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -48,32 +49,66 @@ public class MaLiLibConfigs implements IConfigHandler
 
     public static void loadFromFile()
     {
-        File configFile = new File(FileUtils.getConfigDirectory(), CONFIG_FILE_NAME);
+        //File configFile = new File(FileUtils.getConfigDirectory(), CONFIG_FILE_NAME);
+        Path configFile = FileUtils.getConfigDirectoryAsPath().resolve(CONFIG_FILE_NAME);
 
-        if (configFile.exists() && configFile.isFile() && configFile.canRead())
+        //if (configFile.exists() && configFile.isFile() && configFile.canRead())
+        if (Files.exists(configFile) && Files.isReadable(configFile))
         {
-            JsonElement element = JsonUtils.parseJsonFile(configFile);
+            JsonElement element = JsonUtils.parseJsonFileAsPath(configFile);
 
             if (element != null && element.isJsonObject())
             {
                 JsonObject root = element.getAsJsonObject();
 
                 ConfigUtils.readConfigBase(root, "Generic", Generic.OPTIONS);
+
+                MaLiLib.logger.debug("loadFromFile(): Successfully loaded config file '{}'.", configFile.toAbsolutePath());
             }
+            else
+            {
+                MaLiLib.logger.error("loadFromFile(): Failed to parse config file as a JSON element '{}'.", configFile.toAbsolutePath());
+            }
+        }
+        else
+        {
+            MaLiLib.logger.error("loadFromFile(): Failed to load config file '{}'.", configFile.toAbsolutePath());
         }
     }
 
     public static void saveToFile()
     {
-        File dir = FileUtils.getConfigDirectory();
+        //File dir = FileUtils.getConfigDirectory();
+        Path dir = FileUtils.getConfigDirectoryAsPath();
 
-        if ((dir.exists() && dir.isDirectory()) || dir.mkdirs())
+        //if ((dir.exists() && dir.isDirectory()) || dir.mkdirs())
+        if (!Files.exists(dir))
+        {
+            FileUtils.createDirectoriesIfMissing(dir);
+            MaLiLib.logger.debug("saveToFile(): Creating directory '{}'.", dir.toAbsolutePath());
+        }
+
+        if (Files.isDirectory(dir))
         {
             JsonObject root = new JsonObject();
 
             ConfigUtils.writeConfigBase(root, "Generic", Generic.OPTIONS);
 
-            JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
+            //JsonUtils.writeJsonToFile(root, new File(dir, CONFIG_FILE_NAME));
+            Path config = dir.resolve(CONFIG_FILE_NAME);
+
+            if (JsonUtils.writeJsonToFileAsPath(root, config))
+            {
+                MaLiLib.logger.debug("saveToFile(): Successfully saved config file '{}'.", config.toAbsolutePath());
+            }
+            else
+            {
+                MaLiLib.logger.error("saveToFile(): Failed to save config file '{}'.", config.toAbsolutePath());
+            }
+        }
+        else
+        {
+            MaLiLib.logger.error("saveToFile(): Config Folder '{}' does not exist!", dir.toAbsolutePath());
         }
     }
 
