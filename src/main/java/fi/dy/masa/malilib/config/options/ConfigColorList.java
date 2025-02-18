@@ -50,6 +50,12 @@ public class ConfigColorList extends ConfigBase<ConfigColorList> implements ICon
     }
 
     @Override
+    public void setModified()
+    {
+        this.onValueChanged();
+    }
+
+    @Override
     public void resetToDefault()
     {
         this.setColors(this.defaultValue);

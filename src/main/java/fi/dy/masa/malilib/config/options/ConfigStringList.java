@@ -47,6 +47,12 @@ public class ConfigStringList extends ConfigBase<ConfigStringList> implements IC
     }
 
     @Override
+    public void setModified()
+    {
+        this.onValueChanged();
+    }
+
+    @Override
     public void resetToDefault()
     {
         this.setStrings(this.defaultValue);
