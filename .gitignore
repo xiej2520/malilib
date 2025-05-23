@@ -3,6 +3,13 @@
 bin/
 build/
 eclipse/
+logs/
 .classpath
 .project
 build.number
+Task
+.idea/
+.share/
+run/
+libs/
+/src/main/generated/.cache/
