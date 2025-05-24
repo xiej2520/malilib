@@ -260,7 +260,7 @@ public class InputEventHandler implements IKeybindManager, IInputManager
     private boolean checkKeyBindsForChanges(int eventKey)
     {
         boolean cancel = false;
-        Collection<IKeybind> keybinds = this.hotkeyMap.get(Integer.valueOf(eventKey));
+        Collection<IKeybind> keybinds = this.hotkeyMap.get(eventKey);
 
         if (keybinds.isEmpty() == false)
         {

@@ -8,18 +8,18 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.container.Container;
-import net.minecraft.container.PlayerContainer;
-import net.minecraft.container.Slot;
-import net.minecraft.container.SlotActionType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.BasicInventory;
 import net.minecraft.inventory.DoubleInventory;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.container.PlayerContainer;
+import net.minecraft.container.Container;
+import net.minecraft.container.Slot;
+import net.minecraft.container.SlotActionType;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -264,7 +264,7 @@ public class InventoryUtils
      * Returns the list of items currently stored in the given Shulker Box
      * (or other storage item with the same NBT data structure).
      * Does not keep empty slots.
-     * @param stackIn
+     * @param stackIn The item holding the inventory contents
      * @return
      */
     public static DefaultedList<ItemStack> getStoredItems(ItemStack stackIn)
@@ -302,7 +302,7 @@ public class InventoryUtils
      * Returns the list of items currently stored in the given Shulker Box
      * (or other storage item with the same NBT data structure).
      * Preserves empty slots.
-     * @param stackIn
+     * @param stackIn The item holding the inventory contents
      * @param slotCount the maximum number of slots, and thus also the size of the list to create
      * @return
      */
@@ -368,10 +368,8 @@ public class InventoryUtils
         Object2IntOpenHashMap<ItemType> map = new Object2IntOpenHashMap<>();
         DefaultedList<ItemStack> items = getStoredItems(stackShulkerBox);
 
-        for (int slot = 0; slot < items.size(); ++slot)
+        for (ItemStack stack : items)
         {
-            ItemStack stack = items.get(slot);
-
             if (stack.isEmpty() == false)
             {
                 map.addTo(new ItemType(stack), stack.getCount());

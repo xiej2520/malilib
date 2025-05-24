@@ -2,6 +2,9 @@ package fi.dy.masa.malilib.event;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemStack;
 import fi.dy.masa.malilib.interfaces.IRenderDispatcher;
 import fi.dy.masa.malilib.interfaces.IRenderer;
 import fi.dy.masa.malilib.util.InfoUtils;
@@ -49,7 +52,7 @@ public class RenderEventHandler implements IRenderDispatcher
     /**
      * NOT PUBLIC API - DO NOT CALL
      */
-    public void onRenderGameOverlayPost(net.minecraft.client.MinecraftClient mc, float partialTicks)
+    public void onRenderGameOverlayPost(MinecraftClient mc, float partialTicks)
     {
         mc.getProfiler().push("malilib_rendergameoverlaypost");
 
@@ -73,7 +76,7 @@ public class RenderEventHandler implements IRenderDispatcher
     /**
      * NOT PUBLIC API - DO NOT CALL
      */
-    public void onRenderTooltipLast(net.minecraft.item.ItemStack stack, int x, int y)
+    public void onRenderTooltipLast(ItemStack stack, int x, int y)
     {
         if (this.tooltipLastRenderers.isEmpty() == false)
         {
@@ -87,7 +90,7 @@ public class RenderEventHandler implements IRenderDispatcher
     /**
      * NOT PUBLIC API - DO NOT CALL
      */
-    public void onRenderWorldLast(net.minecraft.client.util.math.MatrixStack matrixStack, net.minecraft.client.MinecraftClient mc, float partialTicks)
+    public void onRenderWorldLast(MatrixStack matrixStack, MinecraftClient mc, float partialTicks)
     {
         if (this.worldLastRenderers.isEmpty() == false)
         {

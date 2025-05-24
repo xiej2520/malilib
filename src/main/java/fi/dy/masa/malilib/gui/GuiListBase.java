@@ -1,11 +1,11 @@
 package fi.dy.masa.malilib.gui;
 
 import javax.annotation.Nullable;
+import net.minecraft.client.MinecraftClient;
 import fi.dy.masa.malilib.gui.interfaces.ISelectionListener;
 import fi.dy.masa.malilib.gui.widgets.WidgetListBase;
 import fi.dy.masa.malilib.gui.widgets.WidgetListEntryBase;
 import fi.dy.masa.malilib.util.KeyCodes;
-import net.minecraft.client.MinecraftClient;
 
 public abstract class GuiListBase<TYPE, WIDGET extends WidgetListEntryBase<TYPE>, WIDGETLIST extends WidgetListBase<TYPE, WIDGET>> extends GuiBase
 {

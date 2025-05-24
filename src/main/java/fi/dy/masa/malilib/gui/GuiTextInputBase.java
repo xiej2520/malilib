@@ -41,7 +41,7 @@ public abstract class GuiTextInputBase extends GuiDialogBase
 
         x += this.createButton(x, y, ButtonType.OK) + 2;
         x += this.createButton(x, y, ButtonType.RESET) + 2;
-        x += this.createButton(x, y, ButtonType.CANCEL) + 2;
+        this.createButton(x, y, ButtonType.CANCEL);
 
         this.mc.keyboard.enableRepeatEvents(true);
     }
@@ -180,7 +180,7 @@ public abstract class GuiTextInputBase extends GuiDialogBase
 
         private final String labelKey;
 
-        private ButtonType(String labelKey)
+        ButtonType(String labelKey)
         {
             this.labelKey = labelKey;
         }
