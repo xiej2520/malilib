@@ -1,6 +1,9 @@
 package fi.dy.masa.malilib.util;
 
 import javax.annotation.Nullable;
+
+import com.mojang.brigadier.StringReader;
+import fi.dy.masa.malilib.MaLiLib;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ChestBlock;
 import net.minecraft.block.ShulkerBoxBlock;
@@ -8,12 +11,15 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.ChestBlockEntity;
 import net.minecraft.block.enums.ChestType;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.command.arguments.ItemStringReader;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.DoubleInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.BasicInventory;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.container.PlayerContainer;
@@ -21,12 +27,18 @@ import net.minecraft.container.Container;
 import net.minecraft.container.Slot;
 import net.minecraft.container.SlotActionType;
 import net.minecraft.util.DefaultedList;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class InventoryUtils
 {
+    public static final Pattern PATTERN_ITEM_BASE = Pattern.compile("^(?<name>(?:[a-z0-9\\._-]+:)[a-z0-9\\._-]+)$");
     private static final DefaultedList<ItemStack> EMPTY_LIST = DefaultedList.of();
 
     /**
@@ -431,5 +443,29 @@ public class InventoryUtils
         }
 
         return inv;
+    }
+
+    @Nullable
+    public static ItemStack getItemStackFromString(String itemNameIn)
+    {
+        try
+        {
+            ItemStringReader reader = new ItemStringReader(new StringReader(itemNameIn), true);
+            reader.consume();
+            Item item = reader.getItem();
+
+            if (item != null)
+            {
+                ItemStack stack = new ItemStack(item);
+                stack.setTag(reader.getTag());
+                return stack;
+            }
+        }
+        catch (Exception e)
+        {
+            MaLiLib.logger.warn("Invalid item '{}'", itemNameIn);
+        }
+
+        return ItemStack.EMPTY;
     }
 }
