@@ -599,6 +599,7 @@ public abstract class GuiBase extends Screen implements IMessageConsumer, IStrin
                 RenderUtils.drawHoverText(mouseX, mouseY, button.getHoverStrings());
             }
         }
+        RenderUtils.disableDiffuseLighting();
     }
 
     protected boolean shouldRenderHoverStuff()
@@ -615,6 +616,7 @@ public abstract class GuiBase extends Screen implements IMessageConsumer, IStrin
         if (this.hoveredWidget != null)
         {
             this.hoveredWidget.postRenderHovered(mouseX, mouseY, false);
+            RenderUtils.disableDiffuseLighting();
         }
     }
 
