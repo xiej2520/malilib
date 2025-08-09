@@ -34,6 +34,8 @@ public interface VertexBuilder
         return this.posUvColor(x, y, z, u, v, r, g, b, a);
     }
 
+    VertexBuilder posColorUvLight(double x, double y, double z, float r, float g, float b, float a, float u, float v, int skyLight, int blockLight);
+
     void addVertexData(int[] data);
 
     void putPosition(double x, double y, double z);
