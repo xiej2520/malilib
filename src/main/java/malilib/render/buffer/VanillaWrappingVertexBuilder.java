@@ -57,6 +57,13 @@ public class VanillaWrappingVertexBuilder implements VertexBuilder
     }
 
     @Override
+    public VertexBuilder posColorUvLight(double x, double y, double z, float r, float g, float b, float a, float u, float v, int skyLight, int blockLight)
+    {
+        this.buffer.pos(x, y, z).color(r, g, b, a).tex(u, v).lightmap(skyLight, blockLight).endVertex();
+        return this;
+    }
+
+    @Override
     public boolean isStarted()
     {
         return this.started;
