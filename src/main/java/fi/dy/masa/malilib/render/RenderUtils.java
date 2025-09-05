@@ -34,7 +34,6 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.FilledMapItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.map.MapState;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -1136,14 +1135,28 @@ public class RenderUtils
         if (block != null && useBgColors)
         {
             // In 1.13+ there is the uncolored Shulker Box variant, which returns null from getColor()
-            final DyeColor dye = block.getColor() != null ? block.getColor() : DyeColor.PURPLE;
-            final float[] colors = dye.getColorComponents();
+            final float[] colors = block.getColor() != null ? block.getColor().getColorComponents() : getColorComponents(0xFF875F87);
             color(colors[0], colors[1], colors[2], 1f);
         }
         else
         {
             color(1f, 1f, 1f, 1f);
         }
+    }
+
+    /**
+     * Copied from 1.20.6 DyeColor for compatibility
+     *
+     * @param color (Color int / entityColor)
+     * @return (float[] of color, old DyeColor method)
+     */
+    public static float[] getColorComponents(int color)
+    {
+        int j = (color & 16711680) >> 16;
+        int k = (color & '\uff00') >> 8;
+        int l = (color & 255) >> 0;
+
+        return new float[]{(float) j / 255.0F, (float) k / 255.0F, (float) l / 255.0F};
     }
 
     public static void renderModelInGui(int x, int y, BakedModel model, BlockState state, float zLevel)
