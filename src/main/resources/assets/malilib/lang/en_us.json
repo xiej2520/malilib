@@ -67,6 +67,7 @@
     "malilib.gui.label.render_layers.layer_max": "Max layer",
     "malilib.gui.label.render_layers.layer_min": "Min layer",
 
+    "malilib.gui.title.all": "All",
     "malilib.gui.title.all_hotkeys": "All registered hotkeys",
     "malilib.gui.title.color_editor": "Color Editor",
     "malilib.gui.title.configs": "malilib Configs",

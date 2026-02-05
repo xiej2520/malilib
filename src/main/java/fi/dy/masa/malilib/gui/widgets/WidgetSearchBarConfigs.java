@@ -81,6 +81,19 @@ public class WidgetSearchBarConfigs extends WidgetSearchBar
         return super.onKeyTypedImpl(keyCode, scanCode, modifiers);
     }
 
+    // This stops you from typing in the Search box
+    // while also setting a Search Keybind at the same time ...
+    @Override
+    protected boolean onCharTypedImpl(char charIn, int modifiers)
+    {
+        if (this.searchOpen && this.button.isSelected())
+        {
+            return true;
+        }
+
+        return super.onCharTypedImpl(charIn, modifiers);
+    }
+
     @Override
     public void render(int mouseX, int mouseY, boolean selected)
     {

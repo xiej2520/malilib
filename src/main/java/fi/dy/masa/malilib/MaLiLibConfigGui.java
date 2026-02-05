@@ -1,5 +1,6 @@
 package fi.dy.masa.malilib;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import fi.dy.masa.malilib.config.IConfigBase;
@@ -7,9 +8,10 @@ import fi.dy.masa.malilib.gui.GuiConfigsBase;
 import fi.dy.masa.malilib.gui.button.ButtonBase;
 import fi.dy.masa.malilib.gui.button.ButtonGeneric;
 import fi.dy.masa.malilib.gui.button.IButtonActionListener;
+import fi.dy.masa.malilib.gui.interfaces.IConfigGuiAllTab;
 import fi.dy.masa.malilib.util.StringUtils;
 
-public class MaLiLibConfigGui extends GuiConfigsBase
+public class MaLiLibConfigGui extends GuiConfigsBase implements IConfigGuiAllTab
 {
     private static ConfigGuiTab tab = ConfigGuiTab.GENERIC;
 
@@ -57,12 +59,39 @@ public class MaLiLibConfigGui extends GuiConfigsBase
     }
 
     @Override
+    public boolean useAllTab()
+    {
+        return true;
+    }
+
+    @Override
+    protected boolean useKeybindSearch()
+    {
+        return MaLiLibConfigGui.tab == ConfigGuiTab.ALL;
+    }
+
+    @Override
+    public List<ConfigOptionWrapper> getAllConfigs()
+    {
+        List<ConfigOptionWrapper> configs = new ArrayList<>();
+
+        configs.addAll(ConfigOptionWrapper.createFor(MaLiLibConfigs.Generic.OPTIONS));
+        configs.addAll(ConfigOptionWrapper.createFor(MaLiLibConfigs.Debug.OPTIONS));
+
+        return configs;
+    }
+
+    @Override
     public List<ConfigOptionWrapper> getConfigs()
     {
         List<? extends IConfigBase> configs;
         ConfigGuiTab tab = MaLiLibConfigGui.tab;
 
-        if (tab == ConfigGuiTab.GENERIC)
+        if (tab == ConfigGuiTab.ALL && this.useAllTab())
+        {
+            return this.getAllConfigs();
+        }
+        else if (tab == ConfigGuiTab.GENERIC)
         {
             configs = MaLiLibConfigs.Generic.OPTIONS;
         }
@@ -95,13 +124,17 @@ public class MaLiLibConfigGui extends GuiConfigsBase
             MaLiLibConfigGui.tab = this.tab;
 
             this.parent.reCreateListWidget(); // apply the new config width
-            this.parent.getListWidget().resetScrollbarPosition();
+            if (this.parent.getListWidget() != null)
+            {
+                this.parent.getListWidget().resetScrollbarPosition();
+            }
             this.parent.initGui();
         }
     }
 
     public enum ConfigGuiTab
     {
+        ALL     (IConfigGuiAllTab.getTranslationKey()),
         GENERIC ("malilib.gui.title.generic"),
         DEBUG   ("malilib.gui.title.debug");
 
