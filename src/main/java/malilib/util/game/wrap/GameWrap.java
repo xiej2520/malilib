@@ -234,7 +234,7 @@ public class GameWrap
 
     public static void profilerPush(Supplier<String> nameSupplier)
     {
-        getClient().profiler.m_4994039(nameSupplier);
+        getClient().profiler.m_62715249(nameSupplier);
     }
 
     public static void profilerSwap(String name)
@@ -244,7 +244,7 @@ public class GameWrap
 
     public static void profilerSwap(Supplier<String> nameSupplier)
     {
-        getClient().profiler.m_3681950(nameSupplier);
+        getClient().profiler.m_65535486(nameSupplier);
     }
 
     public static void profilerPop()
