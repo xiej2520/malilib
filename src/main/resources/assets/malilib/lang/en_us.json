@@ -57,6 +57,9 @@
     "malilib.label.message_output_type.actionbar": "Actionbar",
     "malilib.label.message_output_type.message": "Message",
 
+    "malilib.label.keyboard_type.azerty": "AZERTY",
+    "malilib.label.keyboard_type.qwerty": "QWERTY",
+
     "malilib.gui.label.no": "no",
     "malilib.gui.label.yes": "yes",
 
