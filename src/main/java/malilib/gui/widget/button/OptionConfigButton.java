@@ -12,21 +12,21 @@ import malilib.listener.EventListener;
 import malilib.render.text.StyledTextLine;
 import malilib.util.StringUtils;
 
-public class OptionListConfigButton extends GenericButton
+public class OptionConfigButton extends GenericButton
 {
     protected final OptionConfig<?> config;
     @Nullable protected final String prefixTranslationKey;
     @Nullable protected EventListener changeListener;
 
-    public OptionListConfigButton(int width, int height,
-                                  OptionConfig<?> config)
+    public OptionConfigButton(int width, int height,
+                              OptionConfig<?> config)
     {
         this(width, height, config, null);
     }
 
-    public OptionListConfigButton(int width, int height,
-                                  OptionConfig<?> config,
-                                  @Nullable String prefixTranslationKey)
+    public OptionConfigButton(int width, int height,
+                              OptionConfig<?> config,
+                              @Nullable String prefixTranslationKey)
     {
         super(width, height);
 

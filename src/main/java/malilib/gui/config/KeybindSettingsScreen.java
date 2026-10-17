@@ -10,7 +10,7 @@ import malilib.gui.BaseScreen;
 import malilib.gui.widget.IntegerEditWidget;
 import malilib.gui.widget.LabelWidget;
 import malilib.gui.widget.button.BooleanConfigButton;
-import malilib.gui.widget.button.OptionListConfigButton;
+import malilib.gui.widget.button.OptionConfigButton;
 import malilib.input.KeyBind;
 import malilib.input.KeyBindSettingsConfigs;
 import malilib.util.StringUtils;
@@ -87,7 +87,7 @@ public class KeybindSettingsScreen extends BaseScreen
         }
         else if (config instanceof OptionConfig)
         {
-            OptionListConfigButton btn = new OptionListConfigButton(configWidth, 16, (OptionConfig<?>) config);
+            OptionConfigButton btn = new OptionConfigButton(configWidth, 16, (OptionConfig<?>) config);
             btn.setPosition(x, y);
             this.addWidget(btn);
         }

@@ -17,7 +17,7 @@ import malilib.overlay.widget.sub.DoubleConfigStatusWidget;
 import malilib.overlay.widget.sub.HotkeyConfigStatusWidget;
 import malilib.overlay.widget.sub.HotkeyedBooleanConfigStatusWidget;
 import malilib.overlay.widget.sub.IntegerConfigStatusWidget;
-import malilib.overlay.widget.sub.OptionListConfigStatusWidget;
+import malilib.overlay.widget.sub.OptionConfigStatusWidget;
 import malilib.overlay.widget.sub.StringConfigStatusWidget;
 
 @SuppressWarnings("unchecked")
@@ -63,7 +63,7 @@ public class ConfigStatusWidgetRegistry
         this.registerConfigStatusWidgetFactory(HotkeyConfig.class,          HotkeyConfigStatusWidget::new,          MaLiLibReference.MOD_ID + ":csi_value_hotkey");
         this.registerConfigStatusWidgetFactory(HotkeyedBooleanConfig.class, HotkeyedBooleanConfigStatusWidget::new, MaLiLibReference.MOD_ID + ":csi_value_hotkeyed_boolean");
         this.registerConfigStatusWidgetFactory(IntegerConfig.class,         IntegerConfigStatusWidget::new,         MaLiLibReference.MOD_ID + ":csi_value_integer");
-        this.registerConfigStatusWidgetFactory(OptionConfig.class, OptionListConfigStatusWidget::new, MaLiLibReference.MOD_ID + ":csi_value_option_list");
+        this.registerConfigStatusWidgetFactory(OptionConfig.class, OptionConfigStatusWidget::new, MaLiLibReference.MOD_ID + ":csi_value_option_list");
         this.registerConfigStatusWidgetFactory(StringConfig.class,          StringConfigStatusWidget::new,          MaLiLibReference.MOD_ID + ":csi_value_string");
     }
 }

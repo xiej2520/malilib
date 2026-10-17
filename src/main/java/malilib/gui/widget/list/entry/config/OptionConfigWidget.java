@@ -8,29 +8,29 @@ import malilib.config.option.OptionConfig;
 import malilib.config.value.OptionConfigValue;
 import malilib.gui.config.ConfigWidgetContext;
 import malilib.gui.widget.DropDownListWidget;
-import malilib.gui.widget.button.OptionListConfigButton;
+import malilib.gui.widget.button.OptionConfigButton;
 import malilib.gui.widget.list.entry.DataListEntryWidgetData;
 import malilib.render.text.StyledTextLine;
 
-public class OptionListConfigWidget extends BaseConfigWidget<OptionConfig<OptionConfigValue>>
+public class OptionConfigWidget extends BaseConfigWidget<OptionConfig<OptionConfigValue>>
 {
     protected final OptionConfig<OptionConfigValue> config;
     protected final OptionConfigValue initialValue;
-    protected final OptionListConfigButton optionListButton;
+    protected final OptionConfigButton optionConfigButton;
     protected final DropDownListWidget<OptionConfigValue> dropDownWidget;
 
-    public OptionListConfigWidget(OptionConfig<OptionConfigValue> config,
-                                  DataListEntryWidgetData constructData,
-                                  ConfigWidgetContext ctx)
+    public OptionConfigWidget(OptionConfig<OptionConfigValue> config,
+                              DataListEntryWidgetData constructData,
+                              ConfigWidgetContext ctx)
     {
         super(config, constructData, ctx);
 
         this.config = config;
         this.initialValue = this.config.getValue();
 
-        this.optionListButton = new OptionListConfigButton(80, 20, this.config);
-        this.optionListButton.setHoverStringProvider("locked", this.config::getLockAndOverrideMessages);
-        this.optionListButton.setChangeListener(this::updateWidgetState);
+        this.optionConfigButton = new OptionConfigButton(80, 20, this.config);
+        this.optionConfigButton.setHoverStringProvider("locked", this.config::getLockAndOverrideMessages);
+        this.optionConfigButton.setChangeListener(this::updateWidgetState);
 
         ArrayList<OptionConfigValue> values = new ArrayList<>(config.getAllowedValues());
         this.dropDownWidget = new DropDownListWidget<>(16, 12, values, OptionConfigValue::getDisplayName);
@@ -56,7 +56,7 @@ public class OptionListConfigWidget extends BaseConfigWidget<OptionConfig<Option
 
         boolean useDropDown = MaLiLibConfigs.Generic.OPTION_LIST_CONFIG_USE_DROPDOWN.getBooleanValue();
 
-        this.addWidget(useDropDown ? this.dropDownWidget : this.optionListButton);
+        this.addWidget(useDropDown ? this.dropDownWidget : this.optionConfigButton);
         this.addWidget(this.resetButton);
     }
 
@@ -70,9 +70,9 @@ public class OptionListConfigWidget extends BaseConfigWidget<OptionConfig<Option
         int elementWidth = this.getElementWidth();
 
         this.dropDownWidget.setWidth(elementWidth);
-        this.optionListButton.setWidth(elementWidth);
+        this.optionConfigButton.setWidth(elementWidth);
 
-        this.optionListButton.setPosition(x, y + 1);
+        this.optionConfigButton.setPosition(x, y + 1);
         this.dropDownWidget.setPosition(x, y + 2);
 
         this.resetButton.setPosition(x + elementWidth + 4, y + 1);
@@ -85,8 +85,8 @@ public class OptionListConfigWidget extends BaseConfigWidget<OptionConfig<Option
 
         this.dropDownWidget.setEnabled(this.config.isLocked() == false);
         this.dropDownWidget.updateHoverStrings();
-        this.optionListButton.setEnabled(this.config.isLocked() == false);
-        this.optionListButton.updateButtonState();
+        this.optionConfigButton.setEnabled(this.config.isLocked() == false);
+        this.optionConfigButton.updateButtonState();
     }
 
     @Override
@@ -104,6 +104,6 @@ public class OptionListConfigWidget extends BaseConfigWidget<OptionConfig<Option
 
     protected List<StyledTextLine> getOptionListPreviewHoverString(List<StyledTextLine> previousLines)
     {
-        return OptionListConfigButton.getOptionListPreviewHoverString(this.config, previousLines);
+        return OptionConfigButton.getOptionListPreviewHoverString(this.config, previousLines);
     }
 }

@@ -6,17 +6,17 @@ import malilib.config.value.OptionConfigValue;
 import malilib.render.text.StyledTextLine;
 import malilib.util.data.ConfigOnTab;
 
-public class OptionListConfigStatusWidget extends BaseConfigStatusIndicatorWidget<OptionConfig<OptionConfigValue>>
+public class OptionConfigStatusWidget extends BaseConfigStatusIndicatorWidget<OptionConfig<OptionConfigValue>>
 {
     protected OptionConfigValue lastValue;
 
-    public OptionListConfigStatusWidget(OptionConfig<OptionConfigValue> config, ConfigOnTab configOnTab)
+    public OptionConfigStatusWidget(OptionConfig<OptionConfigValue> config, ConfigOnTab configOnTab)
     {
         this(config, configOnTab, MaLiLibReference.MOD_ID + ":csi_value_option_list");
     }
 
-    public OptionListConfigStatusWidget(OptionConfig<OptionConfigValue> config,
-                                        ConfigOnTab configOnTab, String widgetTypeId)
+    public OptionConfigStatusWidget(OptionConfig<OptionConfigValue> config,
+                                    ConfigOnTab configOnTab, String widgetTypeId)
     {
         super(config, configOnTab, widgetTypeId);
 

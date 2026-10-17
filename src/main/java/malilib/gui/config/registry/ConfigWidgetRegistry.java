@@ -49,7 +49,7 @@ import malilib.gui.widget.list.entry.config.GenericButtonConfigWidget;
 import malilib.gui.widget.list.entry.config.HotkeyConfigWidget;
 import malilib.gui.widget.list.entry.config.HotkeyedBooleanConfigWidget;
 import malilib.gui.widget.list.entry.config.IntegerConfigWidget;
-import malilib.gui.widget.list.entry.config.OptionListConfigWidget;
+import malilib.gui.widget.list.entry.config.OptionConfigWidget;
 import malilib.gui.widget.list.entry.config.PopupConfigGroupWidget;
 import malilib.gui.widget.list.entry.config.StringConfigWidget;
 import malilib.gui.widget.list.entry.config.Vec2dConfigWidget;
@@ -115,7 +115,7 @@ public class ConfigWidgetRegistry
     protected void registerDefaultWidgetFactories()
     {
         this.registerConfigWidgetFactory(BlackWhiteListConfig.class,    BlackWhiteListConfigWidget::new);
-        this.registerConfigWidgetFactory(OptionConfig.class, OptionListConfigWidget::new);
+        this.registerConfigWidgetFactory(OptionConfig.class, OptionConfigWidget::new);
 
         this.registerConfigWidgetFactory(BlockListConfig.class,         BlockListConfigWidget::new);
         this.registerConfigWidgetFactory(BooleanConfig.class,           BooleanConfigWidget::new);
