@@ -1,10 +1,7 @@
 plugins {
-    id 'fabric-loom' version '1.10-SNAPSHOT'
+    id 'fabric-loom' version '1.19-SNAPSHOT'
     id 'maven-publish'
 }
-
-sourceCompatibility = JavaVersion.VERSION_1_8
-targetCompatibility = JavaVersion.VERSION_1_8
 
 repositories {
     maven { url "https://maven.terraformersmc.com/releases/" }
@@ -15,9 +12,6 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.mappings_version}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.fabric_loader_version}"
 	implementation "com.google.code.findbugs:jsr305:3.0.2"
-
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	//modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 	include(modApi(fabricApi.module("fabric-api-base", project.fabric_api_version)))
 	include(modApi(fabricApi.module("fabric-networking-api-v1", project.fabric_api_version)))
@@ -47,7 +41,6 @@ processResources {
 	exclude '**/xcf'
 
 	// this will ensure that this task is redone when the versions change.
-	//inputs.property "minecraft_version", project.project.minecraft_version
 
 	inputs.property "mod_version", project.mod_version
 
@@ -69,7 +62,6 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.withType(AbstractArchiveTask).configureEach {
 	preserveFileTimestamps = true
-	//reproducibleFileOrder = true
 }
 
 java {
@@ -80,9 +72,9 @@ java {
 }
 
 jar {
-	from("LICENSE") {
-		rename { "${it}_${base.archivesName}"}
-	}
+    from("LICENSE.txt") {
+        rename { "${it}_${base.archivesName.get()}" }
+    }
 }
 
 tasks.publish.dependsOn build
@@ -90,7 +82,6 @@ publishing {
 	publications {
 		mavenJava(MavenPublication) {
 			// add all the jars that should be included when publishing to maven
-			//artifact(jar)             { builtBy remapJar }
 			artifactId = base.archivesName.get()
 			from components.java
 		}
